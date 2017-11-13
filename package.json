@@ -1,0 +1,50 @@
+{
+  "name": "meteor-intercom-relay",
+  "private": true,
+  "scripts": {
+    "start": "MONGO_URL=null meteor run",
+    "test": "TEST_WATCH=1 MONGO_URL=null meteor test --full-app --driver-package meteortesting:mocha --port 3100"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "intercom-client": "^2.9.1",
+    "meteor-node-stubs": "^0.3.2",
+    "raven": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.2",
+    "chai": "^4.1.2",
+    "eslint": "^4.7.2",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-meteor": "^4.1.4",
+    "eslint-plugin-react": "^7.4.0"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "allowImportExportEverywhere": true
+    },
+    "plugins": [
+      "meteor"
+    ],
+    "extends": [
+      "airbnb",
+      "plugin:meteor/recommended"
+    ],
+    "settings": {
+      "import/resolver": "meteor"
+    },
+    "rules": {
+      "import/no-unresolved": "off",
+      "import/extensions": "off",
+      "import/no-extraneous-dependencies": "off",
+      "import/newline-after-import": "off",
+      "function-paren-newline": "off",
+      "no-underscore-dangle": "off"
+    }
+  }
+}

@@ -7,13 +7,14 @@ A small Meteor based web service that receives and relays events to
 
 - An [Intercom application access token](https://developers.intercom.com/v2.0/docs/personal-access-tokens).
 - This application is pre-configured to log errors to [sentry.io](https://sentry.io). To log errors, you'll need a [Sentry DSN](https://docs.sentry.io/quickstart/) (this is optional - if you don't specify a DSN remote error logging will be disabled).
+- This application will only relay messages to Intercom if the originating request has a `write-token` set in its header, and if that `write-token` matches the environment configured `WRITE_TOKEN`.
 
 ## Running
 
 ```
 > git clone https://github.com/hwillson/meteor-intercom-relay.git
 > cd meteor-intercom-relay
-> SENTRY_DSN="your dsn" INTERCOM_ACCESS_TOKEN="your token" MONGO_URL=null meteor
+> SENTRY_DSN="your dsn" INTERCOM_ACCESS_TOKEN="your token" WRITE_TOKEN="some random token" MONGO_URL=null meteor
 ```
 
 ## Usage

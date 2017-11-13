@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import bodyParser from 'body-parser';
@@ -7,6 +9,12 @@ const sendStatusCode = (response, statusCode) => {
   response.writeHead(statusCode);
   response.end();
 };
+
+const writeToken = process.env.WRITE_TOKEN;
+if (!writeToken) {
+  console.error('Missing WRITE_TOKEN environment variable.');
+  process.exit(1);
+}
 
 // Register the /track-event POST endpoint.
 const main = () => {
@@ -19,7 +27,10 @@ const main = () => {
 
   app.use('/track-event', (request, response) => {
     if (request.method === 'POST') {
-      if (!request.body || !Object.keys(request.body).length) {
+      const headerWriteToken = request.headers['write-token'];
+      if (!headerWriteToken || headerWriteToken !== writeToken) {
+        sendStatusCode(response, 401);
+      } else if (!request.body || !Object.keys(request.body).length) {
         sendStatusCode(response, 422);
       } else {
         intercom.trackEvent(request.body);

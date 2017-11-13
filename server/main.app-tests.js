@@ -8,6 +8,7 @@ import { expect } from 'chai';
 import Intercom from 'intercom-client';
 
 const rootUrl = process.env.ROOT_URL;
+const writeToken = process.env.WRITE_TOKEN;
 
 describe('Web Service', function () {
   describe('Routing tests', function () {
@@ -25,12 +26,28 @@ describe('Web Service', function () {
     );
 
     it(
+      'should reject access if missing header based authorization token',
+      function () {
+        try {
+          HTTP.post(`${rootUrl}/track-event`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        } catch (error) {
+          expect(error.response.statusCode).to.equal(401);
+        }
+      },
+    );
+
+    it(
       'should return a 422 status code if missing /track-event event params',
       function () {
         try {
           HTTP.post(`${rootUrl}/track-event`, {
             headers: {
               'Content-Type': 'application/json',
+              'write-token': writeToken,
             },
           });
         } catch (error) {
@@ -75,6 +92,7 @@ describe('Web Service', function () {
       HTTP.post(`${rootUrl}/track-event`, {
         headers: {
           'Content-Type': 'application/json',
+          'write-token': writeToken,
         },
         data: {
           email: testEmail,

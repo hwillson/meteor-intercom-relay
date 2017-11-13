@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import { Meteor } from 'meteor/meteor';
 import Intercom from 'intercom-client';
 import sentry from './sentry';
 
@@ -33,8 +34,15 @@ const intercomHandler = (() => {
   // }
   pub.trackEvent = (event) => {
     if (event) {
-      priv.createUserIfMissing(event.email);
-      priv.createEvent(event).catch(priv.logError);
+      priv.userExists(event.email).then(() => {
+        // User exists so go ahead and create the event.
+        priv.createEvent(event);
+      }, () => {
+        // User doesn't exist, so create it first then log the event.
+        priv.createUser(event.email).then(() => {
+          priv.createEvent(event);
+        }, priv.logError);
+      });
     }
   };
 
@@ -48,15 +56,6 @@ const intercomHandler = (() => {
 
   // Holds the Intercom API client object created using `priv.token`.
   priv.client = null;
-
-  // If an Intercom account already exists with the passed in email, do
-  // nothing. Otherwise create a new user account.
-  priv.createUserIfMissing = (email) => {
-    priv.userExists(email).catch(() => {
-      // User doesn't exist, so create it
-      priv.createUser(email).catch(priv.logError);
-    });
-  };
 
   // Does an Intercom accounts already exist with the specified email address.
   priv.userExists = async email => priv.client.users.find({ email });

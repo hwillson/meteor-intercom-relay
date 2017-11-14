@@ -36,11 +36,11 @@ const intercomHandler = (() => {
     if (event) {
       priv.userExists(event.email).then(() => {
         // User exists so go ahead and create the event.
-        priv.createEvent(event);
+        priv.createEvent(event).catch(priv.logError);
       }, () => {
         // User doesn't exist, so create it first then log the event.
         priv.createUser(event.email).then(() => {
-          priv.createEvent(event);
+          priv.createEvent(event).catch(priv.logError);
         }, priv.logError);
       });
     }
